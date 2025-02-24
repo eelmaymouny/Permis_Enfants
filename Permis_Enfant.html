@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permis de Conduire Enfant</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+            background-color: #ffebcd;
+        }
+        .container {
+            width: 60%;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff3cd;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px orange;
+            border: 3px solid #ff4500;
+        }
+        label {
+            display: block;
+            text-align: left;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff4500;
+            margin-top: 10px;
+        }
+        input, select {
+            width: 80%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 2px solid #ff4500;
+        }
+        .loading-bar {
+            display: none;
+            width: 100%;
+            height: 10px;
+            background: #ff4500;
+            animation: loading 3s linear;
+        }
+        @keyframes loading {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        button {
+            padding: 12px 24px;
+            background-color: #ff6347;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 18px;
+            margin-top: 15px;
+        }
+        #permis {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            border: 3px solid #ff4500;
+            border-radius: 10px;
+            background-color: #fff8dc;
+            box-shadow: 0px 0px 15px orange;
+        }
+        #permis img {
+            max-width: 150px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: #ff4500; font-size: 28px;">🎉 Bienvenue à l'Académie des Petits Râleurs 🎉</h1>
+        <label>Nom de l'enfant :</label>
+        <input type="text" id="nom" placeholder="Entrez le nom">
+        
+        <label>Date de naissance :</label>
+        <input type="date" id="dateNaissance">
+        
+        <label>Photo rigolote du conducteur :</label>
+        <input type="file" id="photo" accept="image/*">
+        <br>
+        
+        <label>Catégorie :</label>
+        <select id="categorie">
+            <option value="">-- Sélectionnez une catégorie --</option>
+            <option value="Vélo">Vélo</option>
+            <option value="Trottinette">Trottinette</option>
+            <option value="MonsterTruck">MonsterTruck</option>
+            <option value="Karting">Karting</option>
+            <option value="Bolide junior">Bolide junior</option>
+        </select>
+        
+        <button onclick="genererPermis()">Générer le Permis</button>
+        <div class="loading-bar" id="loading-bar"></div>
+        <div id="permis"></div>
+        <button id="btnImprimer" style="display:none;" onclick="imprimerPermis()">🖨️ Imprimer</button>
+        <button id="btnEnregistrer" style="display:none;" onclick="enregistrerPermis()">💾 Enregistrer en image</button>
+    </div>
+
+    <script>
+        function genererPermis() {
+            let nom = document.getElementById("nom").value.trim();
+            let dateNaissance = document.getElementById("dateNaissance").value;
+            let categorie = document.getElementById("categorie").value;
+            let photoInput = document.getElementById("photo");
+            
+            if (!nom || !dateNaissance || categorie !== "MonsterTruck") {
+                alert("Veuillez remplir toutes les informations et sélectionner 'MonsterTruck' pour générer le permis.");
+                return;
+            }
+            
+            document.getElementById("loading-bar").style.display = "block";
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let photoURL = e.target.result;
+                setTimeout(() => {
+                    document.getElementById("loading-bar").style.display = "none";
+                    document.getElementById("permis").innerHTML = `
+                        <h2 style="color: #ff4500;">🚗 Permis de Conduire Enfant 🚗</h2>
+                        <p><strong>Nom:</strong> ${nom}</p>
+                        <p><strong>Date de naissance:</strong> ${dateNaissance}</p>
+                        <p><strong>Catégorie:</strong> ${categorie}</p>
+                        <img src="${photoURL}" alt="Photo du conducteur">
+                    `;
+                    document.getElementById("permis").style.display = "block";
+                    document.getElementById("btnImprimer").style.display = "inline-block";
+                    document.getElementById("btnEnregistrer").style.display = "inline-block";
+                }, 3000);
+            }
+            if (photoInput.files && photoInput.files[0]) {
+                reader.readAsDataURL(photoInput.files[0]);
+            }
+        }
+    </script>
+</body>
+</html>
